@@ -1,7 +1,5 @@
 ---
 description: Analyze a GitHub repository — verified visual HTML + Obsidian vault note
-user_invocable: true
-argument: "<repo-url-or-local-path>"
 ---
 
 Load the visual-explainer skill, then analyze the GitHub repository at: $@
