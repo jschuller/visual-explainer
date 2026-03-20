@@ -2,7 +2,7 @@
 
 ## Purpose
 
-Every GitHub Intel output must be backed by verifiable data. This protocol ensures zero fabrication by requiring a fact sheet before any HTML or Obsidian note is generated.
+Every GitHub Intel output must be backed by verifiable data. This protocol ensures zero fabrication by requiring a verified fact sheet as the source of truth during generation.
 
 ## Fact Sheet Format
 
@@ -74,7 +74,7 @@ Generated: YYYY-MM-DD
    - Items in this section are EXCLUDED from HTML and Obsidian outputs
    - Better to omit than to fabricate
 
-5. **Present to user before generating**
-   - Show the fact sheet in the conversation
-   - User approves or flags corrections
-   - Only proceed to Phase 3 (Generate) after approval
+5. **Verification is internal — do not pause for approval**
+   - The fact sheet is your source of truth during generation
+   - Every claim in the HTML and Obsidian outputs must trace back to the fact sheet
+   - If something cannot be verified, omit it — better to exclude than fabricate

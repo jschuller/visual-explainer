@@ -1,104 +1,108 @@
 ---
-description: Analyze a GitHub repository — verified visual HTML + Obsidian vault note
+description: Analyze a GitHub repository — visual intelligence dashboard + Obsidian vault note
 ---
+Load the visual-explainer skill, then build an intelligence dashboard for: $@
 
-Load the visual-explainer skill, then analyze the GitHub repository at: $@
+The first argument is the repo URL or local path. Additional text is user guidance
+(e.g., "focus on competitive intel", "compare with project-basanos").
 
-This command has two phases: **prescriptive extraction** (Steps 1-3) followed by **creative generation** using the full visual-explainer workflow (Steps 4-5).
+Follow the visual-explainer skill workflow. Read the reference templates, CSS patterns,
+responsive nav, and libraries references before generating.
 
-## Phase 1 — Extract & Verify (prescriptive)
+**Data gathering** — run in parallel where possible:
 
-### 1. Resolve Input
+1. **Clone/resolve.** URL → `~/.agent/repos/{owner}/{repo}/` (skip if exists, git pull).
+   Local path → use directly, extract owner/repo from `git remote -v`.
 
-Determine if `$1` is a URL or local path:
-- **URL**: clone to `~/.agent/repos/{owner}/{repo}/` (skip if already cloned). Extract owner/repo from the URL.
-- **Local path**: use directly, extract owner/repo from `git remote -v`.
+2. **Git data.** Read `./references/github-intel-extraction.md` for all Tier 1 commands.
+   Commits, dates, contributors, file structure, recent activity, branches, tags.
 
-### 2. Extract Data
+3. **GitHub API.** Tier 2: stars, forks, languages, owner profile, topics, license, releases.
 
-Run tiered extraction. Read `./references/github-intel-extraction.md` for all commands.
+4. **Web intelligence.** Tier 3: search for maintainer LinkedIn, blog, YouTube, conference talks.
+   Use web search tools (Perplexity, WebSearch) if available — richer results than cache alone.
+   Cache at `~/.agent/cache/profiles/{username}.json` with 30-day TTL.
 
-- **Tier 1 (Git)**: commits, dates, contributors, file structure, recent activity — ground truth from the local clone.
-- **Tier 2 (GitHub API)**: stars, forks, languages, owner profile, topics, license — via `gh` CLI.
-- **Tier 3 (Web Search)**: maintainer LinkedIn, blog, YouTube. Cache at `~/.agent/cache/profiles/{username}.json` with 30-day TTL.
-- **Code Analysis**: read 10-15 key files — entry points, config, dependencies, README, core domain files. Go deep: read service internals, data models, config schemas, rule definitions, deployment scripts. Extract code patterns worth showing.
+5. **README assessment.** Read the README fully. Score each area as COVERED / PARTIAL / ABSENT:
+   purpose, components, architecture, tech stack, deployment, usage, testing.
+   This drives how deep to go — don't rehash what the README already explains well.
 
-Record the source of every data point.
+6. **Deep code analysis.** Read 10-20 key files — entry points, config, core domain,
+   data models, DSL/rule definitions, deployment scripts, test files (if any).
+   Look for: architectural patterns, interesting abstractions, code the README doesn't mention,
+   discrepancies between README claims and actual code.
 
-### 3. Build Fact Sheet — Mandatory Verification Checkpoint
+**Verification** — build a fact sheet at `~/.agent/cache/fact-sheets/{owner}-{repo}.md`.
+Read `./references/github-intel-verification.md` for format.
+Every claim cites source command or file:line. Architecture claims need file:line evidence.
+Cross-reference README claims against code — note discrepancies.
+Unverified claims excluded from outputs. Do not present for approval — just be rigorous.
 
-Read `./references/github-intel-verification.md` for fact sheet format.
+**Generate visual HTML** — follow Think → Structure → Style → Deliver.
 
-- Create fact sheet at `~/.agent/cache/fact-sheets/{owner}-{repo}.md`
-- Every claim cites its source command or `file:line`
-- Cross-reference: URL from `git remote`, stars from `gh api`, contributor names from `git log`, dates from git history
-- Architecture claims need `file:line` evidence
-- Unverified claims go in a mandatory "Unverified" section and are excluded from outputs
-- **Present fact sheet to user for review before proceeding**
-- User approves or flags corrections — only proceed to Phase 2 after approval
+Read ALL templates and references before generating (architecture.html for card/pipeline/grid
+patterns, mermaid-flowchart.html for diagram-shell JS + ELK import, intel-page.html for
+stats/language/profile/timeline patterns, css-patterns.md, responsive-nav.md, libraries.md).
 
-## Phase 2 — Generate (creative, visual-explainer workflow)
+Think: pick aesthetic, font pairing, palette. Vary from recent pages.
+Decide page posture — if README is thorough, lean intel-focused; if sparse, more explanatory.
 
-### 4. Generate Visual HTML
+Structure: section names tell a story, not catalog content.
+"Signal Processing Chain" > "Architecture". "What the YAML Rules Actually Look Like" > "Key Files".
 
-**Follow the full visual-explainer skill workflow: Think → Structure → Style → Deliver.**
+**The page is an intelligence dashboard that does what GitHub markdown cannot:**
 
-Read the SKILL.md design principles, then read ALL of these before generating:
-- `./templates/architecture.html` — for card layouts, pipeline steps, flow arrows, depth tiers, inner grids
-- `./templates/mermaid-flowchart.html` — for the full diagram-shell JS module (zoom/pan/touch/fit, ~200 lines) AND the ESM import of `@mermaid-js/layout-elk` for better node positioning. Copy both the JS module and the ELK import wholesale.
-- `./templates/intel-page.html` — for GitHub-specific components (stats row, language bar, profile card, timeline, assessment callouts, expandable `<details>` pattern)
-- `./references/css-patterns.md` — for shared patterns (overflow protection, code blocks, collapsibles, hero images, prose elements)
-- `./references/responsive-nav.md` — for sticky sidebar TOC on desktop + horizontal scrollable bar on mobile
-- `./references/libraries.md` — for Mermaid theming, Chart.js, font pairings
+- **README fidelity panel** — hero-level. Cross-reference README claims vs code.
+  "README says 53 rules, code has 45." Green/amber/red verification badges per claim.
+  This is the first unique thing the reader sees.
 
-**Think step — commit to a direction:**
-- Pick an aesthetic that fits this repo (Editorial, Blueprint, Paper/ink, or IDE-inspired). Vary from recent pages.
-- Pick a font pairing from the SKILL.md list. Don't default to the same one every time.
-- Design a palette with CSS custom properties. At minimum: `--bg`, `--surface`, `--border`, `--text`, `--text-dim`, and 3-5 accent colors.
-- Decide visual hierarchy: what sections deserve hero treatment (architecture, key insight) vs. compact treatment (file lists, metadata).
+- **Interactive architecture** — Mermaid diagram the agent designed from reading code,
+  NOT rehashed from README. Diagram-shell with zoom/pan/touch/fit. Use ELK layout.
+  If code architecture differs from README description, show both and highlight divergence.
+  Consider multiple diagrams: system overview + data flow + deployment topology.
 
-**Structure step — design the page from the data, not from a rigid template:**
+- **Code deep dives** — 3-5 illuminating code excerpts (5-15 lines) that reveal how the
+  system actually works. Rule DSL syntax, config schemas, pipeline orchestration, data models.
+  Things the README can't show. Use styled code blocks with file path headers.
 
-The page must cover these content areas (but YOU decide the section names, ordering, depth, and visual treatment based on what's interesting about this specific repo):
+- **Pipeline/flow visualizations** — CSS animated step boxes with directional arrows
+  for any multi-stage processing found in code. Animate flow direction.
+  This is impossible in markdown and communicates architecture 10x better.
 
-- **Repository identity** — stats, languages, metadata. Use the stats row + language bar patterns from intel-page.html.
-- **What it does** — the system's components/engines/modules. Use engine cards from intel-page.html or architecture cards from architecture.html — whichever fits better.
-- **How it works** — architecture diagram (Mermaid in diagram-shell with full zoom/pan/touch controls) PLUS pipeline visualizations for any multi-stage processing flows found in the code. Use the pipeline step pattern from architecture.html. Show actual code flow, not just boxes.
-- **Technology stack** — table with `file:line` evidence. Include dependency details, config schemas, and interesting technical choices in an expandable `<details>`.
-- **Key files** — table PLUS expandable deep-dive with actual code snippets (5-15 lines each) for the most illuminating files. Show data models, DSL examples, config schemas — anything that reveals how the system really works. Use `white-space: pre-wrap` code blocks.
-- **Maintainer** — profile card with avatar, links, bio. Use the profile pattern from intel-page.html.
-- **Activity** — timeline with gold dot markers.
-- **Assessment** — key takeaways + competitive intelligence. Include a technical maturity table. Use expandable `<details>` for strategic depth, deployment comparisons, lessons learned (if found in CHANGELOG/commits).
+- **Commit activity** — visual heatmap or sparkline of development rhythm from git log dates.
+  Burst patterns, quiet periods, velocity trends. Chart.js or inline SVG.
 
-**Use expandable `<details>` sections generously** — collapsed by default — for deep dives under Architecture, Tech Stack, Key Files, and Assessment. The surface page should be scannable; the depth should be there for those who want it.
+- **Maturity signals** — test coverage (any test files?), CI/CD (Actions?), dependency
+  freshness, commit patterns, branch strategy, documentation quality. Rated badges.
 
-**Style step — apply visual-explainer design principles:**
-- Both light and dark themes must work (CSS custom properties with media query)
-- Staggered fadeUp animations with reduced-motion support
-- Surface depth tiers: hero (elevated) for primary sections, default for body, recessed for reference material
-- Mermaid with custom `themeVariables` matching your palette
-- Status/severity badges where appropriate (colored spans, not emoji)
-- No AI slop (no Inter font, no gradient text, no glowing shadows, no emoji headers)
+- **Maintainer intelligence** — profile card with web-sourced social data, background, network.
+  Position early, not at bottom — this is intelligence, not metadata.
 
-**Optional hero image** — check `which gemini-image 2>/dev/null || which surf 2>/dev/null`. If available, generate a hero banner that captures the project's domain. Embed as base64 data URI.
+- **Repository identity** — stats row, language bar. Keep compact — quantitative data
+  in a visual format the README doesn't provide.
+
+- **Technology evidence** — table with file:line citations. Compact — the value is in
+  the verification, not the list. Expand depth only where README is ABSENT.
+
+- **Assessment** — key takeaways, competitive intelligence, strategic positioning.
+  What this repo means in context. This is analysis, not summary.
+
+**All sections visible** — no collapsed `<details>` for primary content. The sticky
+sidebar TOC handles navigation. Use depth tiers (hero/default/recessed) for visual
+hierarchy instead. `<details>` only for optional supplementary material within a section.
+
+**Style** — light/dark themes, staggered animations with reduced-motion, Mermaid
+themeVariables matching palette, status badges (colored spans not emoji), no AI slop.
+
+**Hero image** — check `which gemini-image 2>/dev/null || which surf 2>/dev/null`.
+If available, generate a banner matching the page aesthetic. Skip gracefully if not.
 
 **Output**: `~/.agent/diagrams/intel-github/{owner}/{repo}.html` — open in browser.
 
-### 5. Generate Obsidian Note
+**Generate Obsidian note** — load obsidian-markdown skill.
+Read `./references/github-intel-obsidian.md` for frontmatter + body structure.
+Output to vault `intel-github/` folder. Mermaid: fenced blocks, `graph TD`, no HTML.
 
-Load the obsidian-markdown skill, then:
-
-- Read `./references/github-intel-obsidian.md` for frontmatter schema and body structure
-- Output to vault `intel-github/` folder
-- Vault root: check `~/.agent/vault-path` or use default (`/Users/jschulle/Library/CloudStorage/GoogleDrive-joshua.schuller@gmail.com/My Drive/Applications/vault-obsidian/`)
-- All wikilinks, callouts, and frontmatter must be valid Obsidian syntax
-- Mermaid: fenced code blocks, `graph TD`, short labels, no HTML
-
-### 6. Report
-
-Show user what was created with file paths:
-- HTML page path
-- Obsidian note path
-- Fact sheet path
+**Report** — show file paths: HTML page, Obsidian note, fact sheet.
 
 Ultrathink.
