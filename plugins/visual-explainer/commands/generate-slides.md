@@ -11,7 +11,7 @@ Follow the visual-explainer skill workflow. Read the reference template at `./te
 
 **Narrative structure:** Slides have a temporal dimension — compose a story arc, not a list of sections. Start with impact (title), build context (overview), deep dive (content, diagrams, data), resolve (summary/next steps). Plan the slide sequence and assign a composition (centered, left-heavy, split, full-bleed) to each slide before writing HTML.
 
-**Visual richness:** Proactively reach for visuals. If `surf` CLI is available (`which surf`), generate images for title slide backgrounds and full-bleed slides via `surf gemini --generate-image`. Add SVG decorative accents, inline sparklines, mini-charts, and small Mermaid diagrams where they make the story more compelling. Visual-first, text-second.
+**Visual richness:** Proactively reach for visuals. Check `which gemini-image 2>/dev/null || which surf 2>/dev/null`. If available, generate images for title slide backgrounds and full-bleed slides via `gemini-image "prompt" --generate-image /tmp/file.png --aspect-ratio 16:9`. Add SVG decorative accents, inline sparklines, mini-charts, and small Mermaid diagrams where they make the story more compelling. Visual-first, text-second.
 
 **Compositional variety:** Consecutive slides must vary their spatial approach. Alternate between centered, left-heavy, right-heavy, split, edge-aligned, and full-bleed. Three centered slides in a row means push one off-axis.
 

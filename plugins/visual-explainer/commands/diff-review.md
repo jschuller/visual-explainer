@@ -59,7 +59,7 @@ Verify each claim against the code. If something cannot be verified, mark it as 
 
 **Visual hierarchy**: Sections 1-3 should dominate the viewport on load (hero depth, larger type, more padding). Sections 6+ are reference material and should feel lighter (flat or recessed depth, compact layout, collapsible where appropriate).
 
-**Optional illustrations** — if `surf` CLI is available (`which surf`), consider generating a hero banner or conceptual illustration via `surf gemini --generate-image` when it would enhance the page. Embed as base64 data URI. See css-patterns.md "Generated Images" for container styles. Skip if surf isn't available or the diff is purely structural.
+**Optional illustrations** — check `which gemini-image 2>/dev/null || which surf 2>/dev/null`. If available, consider generating a hero banner or conceptual illustration via `gemini-image "prompt" --generate-image /tmp/file.png --aspect-ratio 16:9` when it would enhance the page. Embed as base64 data URI. See css-patterns.md "Generated Images" for container styles. Skip if neither CLI is available or the diff is purely structural.
 
 Include responsive section navigation. Use diff-style visual language throughout: red for removed/before, green for added/after, yellow for modified, blue for neutral context. Write to `~/.agent/diagrams/` and open in browser.
 

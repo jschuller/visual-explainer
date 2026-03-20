@@ -1,7 +1,7 @@
 {
   "name": "visual-explainer-marketplace",
   "owner": {
-    "name": "nicobailon"
+    "name": "jschuller"
   },
   "metadata": {
     "description": "Plugin distribution for visual-explainer",
@@ -13,11 +13,11 @@
       "name": "visual-explainer",
       "source": "./plugins/visual-explainer",
       "description": "Generate beautiful HTML pages for diagrams, diff reviews, plan reviews, slides, and data tables",
-      "version": "0.5.1",
+      "version": "0.7.0",
       "author": {
-        "name": "nicobailon"
+        "name": "jschuller"
       },
-      "repository": "https://github.com/nicobailon/visual-explainer",
+      "repository": "https://github.com/jschuller/visual-explainer",
       "license": "MIT",
       "keywords": ["diagrams", "html", "visualization", "diff-review", "slides"],
       "category": "visualization",
