@@ -45,7 +45,7 @@ Read `./references/github-intel-verification.md` for fact sheet format.
 
 Read the SKILL.md design principles, then read ALL of these before generating:
 - `./templates/architecture.html` — for card layouts, pipeline steps, flow arrows, depth tiers, inner grids
-- `./templates/mermaid-flowchart.html` — for the full diagram-shell JS module (zoom/pan/touch/fit, ~200 lines), copy wholesale
+- `./templates/mermaid-flowchart.html` — for the full diagram-shell JS module (zoom/pan/touch/fit, ~200 lines) AND the ESM import of `@mermaid-js/layout-elk` for better node positioning. Copy both the JS module and the ELK import wholesale.
 - `./templates/intel-page.html` — for GitHub-specific components (stats row, language bar, profile card, timeline, assessment callouts, expandable `<details>` pattern)
 - `./references/css-patterns.md` — for shared patterns (overflow protection, code blocks, collapsibles, hero images, prose elements)
 - `./references/responsive-nav.md` — for sticky sidebar TOC on desktop + horizontal scrollable bar on mobile
