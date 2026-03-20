@@ -4,9 +4,9 @@ description: Analyze a GitHub repository — verified visual HTML + Obsidian vau
 
 Load the visual-explainer skill, then analyze the GitHub repository at: $@
 
-Follow the visual-explainer skill workflow. Read the reference template at `./templates/intel-page.html`, CSS patterns at `./references/css-patterns.md`, and responsive nav at `./references/responsive-nav.md` before generating.
+This command has two phases: **prescriptive extraction** (Steps 1-3) followed by **creative generation** using the full visual-explainer workflow (Steps 4-5).
 
-## Execution Steps
+## Phase 1 — Extract & Verify (prescriptive)
 
 ### 1. Resolve Input
 
@@ -21,7 +21,7 @@ Run tiered extraction. Read `./references/github-intel-extraction.md` for all co
 - **Tier 1 (Git)**: commits, dates, contributors, file structure, recent activity — ground truth from the local clone.
 - **Tier 2 (GitHub API)**: stars, forks, languages, owner profile, topics, license — via `gh` CLI.
 - **Tier 3 (Web Search)**: maintainer LinkedIn, blog, YouTube. Cache at `~/.agent/cache/profiles/{username}.json` with 30-day TTL.
-- **Code Analysis**: read 10-15 key files — entry points, config, dependencies, README, core domain files.
+- **Code Analysis**: read 10-15 key files — entry points, config, dependencies, README, core domain files. Go deep: read service internals, data models, config schemas, rule definitions, deployment scripts. Extract code patterns worth showing.
 
 Record the source of every data point.
 
@@ -35,41 +35,52 @@ Read `./references/github-intel-verification.md` for fact sheet format.
 - Architecture claims need `file:line` evidence
 - Unverified claims go in a mandatory "Unverified" section and are excluded from outputs
 - **Present fact sheet to user for review before proceeding**
-- User approves or flags corrections — only proceed to generation after approval
+- User approves or flags corrections — only proceed to Phase 2 after approval
+
+## Phase 2 — Generate (creative, visual-explainer workflow)
 
 ### 4. Generate Visual HTML
 
-Follow the visual-explainer workflow: Think → Structure → Style → Deliver.
+**Follow the full visual-explainer skill workflow: Think → Structure → Style → Deliver.**
 
-- Read `./templates/intel-page.html` for the 8-section structure with expandable deep-dive `<details>` blocks
-- Read `./templates/mermaid-flowchart.html` for the diagram-shell zoom/pan/touch/fit JS module (~200 lines) — copy it wholesale
-- Read `./references/responsive-nav.md` for sticky sidebar TOC on desktop + horizontal scrollable bar on mobile
+Read the SKILL.md design principles, then read ALL of these before generating:
+- `./templates/architecture.html` — for card layouts, pipeline steps, flow arrows, depth tiers, inner grids
+- `./templates/mermaid-flowchart.html` — for the full diagram-shell JS module (zoom/pan/touch/fit, ~200 lines), copy wholesale
+- `./templates/intel-page.html` — for GitHub-specific components (stats row, language bar, profile card, timeline, assessment callouts, expandable `<details>` pattern)
+- `./references/css-patterns.md` — for shared patterns (overflow protection, code blocks, collapsibles, hero images, prose elements)
+- `./references/responsive-nav.md` — for sticky sidebar TOC on desktop + horizontal scrollable bar on mobile
+- `./references/libraries.md` — for Mermaid theming, Chart.js, font pairings
 
-**8 overview sections (always visible):**
-1. Repository Overview — stats row, language breakdown bar, repo details table
-2. Engines/Components — grid cards with colored top borders
-3. System Architecture — Mermaid `graph TD` in diagram-shell with zoom/pan/touch/fit controls
-4. Technology Stack — table with evidence column (file:line references)
-5. Key Files & Entry Points — table
-6. Maintainer Profile — avatar, name, role, company, LinkedIn, bio
-7. Activity Timeline — visual timeline with dots and connector line
-8. Assessment & Takeaways — callout cards
+**Think step — commit to a direction:**
+- Pick an aesthetic that fits this repo (Editorial, Blueprint, Paper/ink, or IDE-inspired). Vary from recent pages.
+- Pick a font pairing from the SKILL.md list. Don't default to the same one every time.
+- Design a palette with CSS custom properties. At minimum: `--bg`, `--surface`, `--border`, `--text`, `--text-dim`, and 3-5 accent colors.
+- Decide visual hierarchy: what sections deserve hero treatment (architecture, key insight) vs. compact treatment (file lists, metadata).
 
-**Expandable deep-dive `<details>` sections (collapsed by default):**
-- Under Architecture: pipeline visualization (CSS step boxes with arrows), architecture intelligence stack bar
-- Under Tech Stack: dependency details, configuration specifics
-- Under Key Files: code snippets, data models
-- Under Assessment: strategic depth, deploy comparison
+**Structure step — design the page from the data, not from a rigid template:**
 
-**Baked-in infrastructure:**
-- Diagram-shell JS (zoom/pan/touch/fit) from `mermaid-flowchart.html`
-- ESM import of Mermaid + ELK layout
-- Responsive sticky TOC
-- CSS custom properties with light/dark themes
-- fadeUp animations with reduced-motion support
-- Editorial aesthetic: Instrument Serif + JetBrains Mono + DM Sans, navy + gold palette
+The page must cover these content areas (but YOU decide the section names, ordering, depth, and visual treatment based on what's interesting about this specific repo):
 
-**Optional hero image** — check `which gemini-image 2>/dev/null || which surf 2>/dev/null`. If available, generate a hero banner via `gemini-image "prompt" --generate-image /tmp/file.png --aspect-ratio 16:9`. Embed as base64 data URI.
+- **Repository identity** — stats, languages, metadata. Use the stats row + language bar patterns from intel-page.html.
+- **What it does** — the system's components/engines/modules. Use engine cards from intel-page.html or architecture cards from architecture.html — whichever fits better.
+- **How it works** — architecture diagram (Mermaid in diagram-shell with full zoom/pan/touch controls) PLUS pipeline visualizations for any multi-stage processing flows found in the code. Use the pipeline step pattern from architecture.html. Show actual code flow, not just boxes.
+- **Technology stack** — table with `file:line` evidence. Include dependency details, config schemas, and interesting technical choices in an expandable `<details>`.
+- **Key files** — table PLUS expandable deep-dive with actual code snippets (5-15 lines each) for the most illuminating files. Show data models, DSL examples, config schemas — anything that reveals how the system really works. Use `white-space: pre-wrap` code blocks.
+- **Maintainer** — profile card with avatar, links, bio. Use the profile pattern from intel-page.html.
+- **Activity** — timeline with gold dot markers.
+- **Assessment** — key takeaways + competitive intelligence. Include a technical maturity table. Use expandable `<details>` for strategic depth, deployment comparisons, lessons learned (if found in CHANGELOG/commits).
+
+**Use expandable `<details>` sections generously** — collapsed by default — for deep dives under Architecture, Tech Stack, Key Files, and Assessment. The surface page should be scannable; the depth should be there for those who want it.
+
+**Style step — apply visual-explainer design principles:**
+- Both light and dark themes must work (CSS custom properties with media query)
+- Staggered fadeUp animations with reduced-motion support
+- Surface depth tiers: hero (elevated) for primary sections, default for body, recessed for reference material
+- Mermaid with custom `themeVariables` matching your palette
+- Status/severity badges where appropriate (colored spans, not emoji)
+- No AI slop (no Inter font, no gradient text, no glowing shadows, no emoji headers)
+
+**Optional hero image** — check `which gemini-image 2>/dev/null || which surf 2>/dev/null`. If available, generate a hero banner that captures the project's domain. Embed as base64 data URI.
 
 **Output**: `~/.agent/diagrams/intel-github/{owner}/{repo}.html` — open in browser.
 
